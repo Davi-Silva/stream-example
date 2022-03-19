@@ -34,25 +34,25 @@ app.use("/stream/audio", (req, res) => {
 
 app.use("/stream/video", (req, res) => {
   const range = req.headers.range;
-  const songPath = resolve(__dirname, "assets", "video", "video.mp4");
-  const songSize = statSync(songPath).size;
+  const videoPath = resolve(__dirname, "assets", "video", "video.mp4");
+  const videoSize = statSync(videoPath).size;
 
   const start = Number(range.replace(/\D/g, ""));
 
   const BUFFER_SIZE = 50000;
-  const end = Math.min(start + BUFFER_SIZE, songSize - 1);
+  const end = Math.min(start + BUFFER_SIZE, videoSize - 1);
 
   const headers = {
-    "Content-Range": `bytes ${start}-${end}/${songSize}`,
+    "Content-Range": `bytes ${start}-${end}/${videoSize}`,
     "Accept-Ranges": "bytes",
     "Content-type": "audio/mpeg",
   };
 
   res.writeHead(206, headers);
 
-  const songStream = createReadStream(songPath, { start, end });
+  const videoStream = createReadStream(videoPath, { start, end });
 
-  songStream.pipe(res);
+  videoStream.pipe(res);
 });
 
 app.listen(PORT, () => {
